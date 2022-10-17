@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const messageSchema = mongoose.Schema(
   {
-    from: { type: mongoose.Types.ObjectId, ref: "Users" },
+    from: { type: mongoose.Types.ObjectId, ref: "users" },
     text: { type: String },
     imageUrl: { type: String },
   },
@@ -10,8 +10,8 @@ const messageSchema = mongoose.Schema(
 );
 
 const conversationModel = mongoose.Schema({
-  users: [{ type: mongoose.Types.ObjectId, ref: "Users" }],
-  message: [messageSchema],
+  participants: [{ type: mongoose.Types.ObjectId, ref: "Users" }],
+  messages: [messageSchema],
 });
 
 exports.messageSchema = mongoose.model("Message", messageSchema);

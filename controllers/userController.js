@@ -1,6 +1,7 @@
 const User = require("../models/userModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jwt-simple");
+const config = require("../config");
 
 exports.signup = (req, res, next) => {
   bcrypt
@@ -22,7 +23,7 @@ exports.signup = (req, res, next) => {
         );
     })
     .catch((error) =>
-      res.status(500).json({ message: "Something went wrong with bcrypt!" })
+      res.status(500).json({ message: "Something went wrong!" })
     );
 };
 
@@ -30,23 +31,29 @@ exports.login = (req, res, next) => {
   User.findOne({ email: req.body.email })
     .then((user) => {
       if (!user) {
-        return res.status(401).json({ message: "Invalid email or password" });
-      }
-      bcrypt
-        .compare(req.body.password, user.password)
-        .then((valid) => {
-          if (!valid) {
-            return res
-              .status(401)
-              .json({ message: "Invalid email or password" });
-          }
+        res.status(401).json("mail or username incorect");
+      } else {
+        const payload = {
+          id: user.id,
+          name: user.firstName + " " + user.lastName,
+          expire: Date.now() + 1000 * 60 * 60 * 24 * 7,
+        };
+        const token = jwt.encode(payload, config.secretKey);
 
-          res.status(200).json({
-            userId: user._id,
-            token: "TOKEN",
+        bcrypt
+          .compare(req.body.password, user.password)
+
+          .then((valid) => {
+            if (!valid) res.status(401).json("invalid password or username");
+            else {
+              delete user.password;
+              res.status(200).json({
+                userId: user.id,
+                token: `Bearer ${token}`,
+              });
+            }
           });
-        })
-        .catch((error) => res.status(500).json({ error }));
+      }
     })
-    .catch((error) => res.status(500).json({ error }));
+    .catch((err) => res.status(500).json(err));
 };

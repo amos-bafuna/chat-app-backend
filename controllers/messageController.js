@@ -96,7 +96,7 @@ exports.newMessage = async (req, res, next) => {
           if (error)
             res.status(400).send({
               type: "Error",
-              message: "Sothing went wrong",
+              message: "Something went wrong",
             });
           else {
             res.status(201).send({

@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const userRoute = require("./routes/userRoutes");
 const messageRoutes = require("./routes/messageRoute");
 const passport = require("passport");
+require("./middlewares/auth");
 
 const app = express();
 
@@ -28,15 +29,11 @@ app.use((req, res, next) => {
   );
   next();
 });
-/* 
+
 app.use(passport.initialize());
-app.use(passport.authenticate("jwt", { session: false })); */
+const restrictor = passport.authenticate("jwt", { session: false });
 
 app.use("/main", userRoute);
-app.use("/message", messageRoutes);
-
-app.use((req, res) => {
-  res.json({ message: "Votre requête a bien été reçue !" });
-});
+app.use("/message", restrictor, messageRoutes);
 
 module.exports = app;

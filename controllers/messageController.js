@@ -39,7 +39,7 @@ exports.findOrCreateConversation = async (req, res, next) => {
 
   const oldConversation = await Conversation.findOne({
     participants: { $all: participants },
-  });
+  }).populate("participants");
 
   if (oldConversation) return res.send(oldConversation);
 
@@ -121,7 +121,9 @@ exports.getRecentsConversations = async (req, res) => {
 
   const recents = await Conversation.find({
     participants: { $in: id },
-  }).sort({ updatedAt: "desc" });
+  })
+    .populate("participants")
+    .sort({ updatedAt: "desc" });
 
   res.send(recents);
 };

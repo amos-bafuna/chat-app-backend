@@ -31,10 +31,11 @@ exports.login = (req, res, next) => {
   User.findOne({ email: req.body.email })
     .then((user) => {
       if (!user) {
-        res.status(401).json("mail or username incorect");
+        res.status(401).json("Email ou mot de passe incorrect");
       } else {
         const payload = {
           id: user.id,
+          email: user.email,
           name: user.firstName + " " + user.lastName,
           expire: Date.now() + 1000 * 60 * 60 * 24 * 7,
         };
@@ -44,7 +45,7 @@ exports.login = (req, res, next) => {
           .compare(req.body.password, user.password)
 
           .then((valid) => {
-            if (!valid) res.status(401).json("invalid password or username");
+            if (!valid) res.status(401).json("Mot de passe incorrect");
             else {
               delete user.password;
               res.status(200).json({
@@ -56,4 +57,16 @@ exports.login = (req, res, next) => {
       }
     })
     .catch((err) => res.status(500).json(err));
+};
+
+exports.user = (req, res, next) => {
+  User.findOne({ _id: req.body.userId })
+    .then((user) => {
+      if (!user) {
+        res.status(401).json("Something went wrong");
+      } else {
+        res.status(200).json(user);
+      }
+    })
+    .catch(() => res.status(401).json("Something went wrong"));
 };

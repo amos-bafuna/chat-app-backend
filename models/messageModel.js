@@ -10,7 +10,7 @@ const messageSchema = mongoose.Schema(
 );
 
 const conversationModel = mongoose.Schema({
-  participants: [{ type: mongoose.Types.ObjectId, ref: "Users" }],
+  participants: [{ type: mongoose.Types.ObjectId, ref: "User" }],
   messages: [messageSchema],
 });
 

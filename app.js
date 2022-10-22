@@ -1,8 +1,10 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const cors = require("cors");
 const userRoute = require("./routes/userRoutes");
 const messageRoutes = require("./routes/messageRoute");
 const passport = require("passport");
+const restrictor = require("./middlewares/restrictor");
 require("./middlewares/auth");
 
 const app = express();
@@ -16,6 +18,7 @@ mongoose
   .catch(() => console.log("Connexion à MongoDB échouée !"));
 
 app.use(express.json());
+app.use(cors());
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -31,7 +34,6 @@ app.use((req, res, next) => {
 });
 
 app.use(passport.initialize());
-const restrictor = passport.authenticate("jwt", { session: false });
 
 app.use("/main", userRoute);
 app.use("/message", restrictor, messageRoutes);

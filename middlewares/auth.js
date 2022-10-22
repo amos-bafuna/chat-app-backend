@@ -9,7 +9,7 @@ opts.secretOrKey = config.secretKey;
 
 passport.use(
   new JwtStrategy(opts, function (jwt_payload, done) {
-    User.findOne({ email: jwt_payload.sub }, function (err, user) {
+    User.findOne({ id: jwt_payload.id }, function (err, user) {
       if (err) {
         return done(err, false);
       }

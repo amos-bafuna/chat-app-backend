@@ -10,14 +10,12 @@ exports.signup = (req, res, next) => {
       const user = new User({
         userName: req.body.name,
         firstName: req.body.firstName,
-        lastName: req.body.lastName,
         email: req.body.email,
-        profil: req.body.profil,
         password: hash,
       });
       user
         .save()
-        .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
+        .then(() => next())
         .catch(() =>
           res.status(400).json({ message: 'Something went wrong !' })
         );
@@ -68,7 +66,7 @@ exports.users = (req, res, next) => {
         users.map((user) => ({
           id: user._id,
           name: user.userName,
-          lastName: user.lastName,
+          firstName: user.firstName,
         }))
       );
     }

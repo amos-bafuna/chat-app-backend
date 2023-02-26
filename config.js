@@ -1,1 +1,1 @@
-exports.secretKey = "@mos1234";
+exports.secretKey = '@mos1234';

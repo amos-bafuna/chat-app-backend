@@ -6,7 +6,6 @@ const messageRoutes = require('./routes/messageRoute');
 const passport = require('passport');
 const restrictor = require('./middlewares/restrictor');
 const dbConnect = require('./lib/db.js');
-const { db } = require('./models/userModel');
 require('./middlewares/auth');
 require('dotenv').config();
 
